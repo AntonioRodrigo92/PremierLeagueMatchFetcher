@@ -1,6 +1,8 @@
 import os
 import json
 import pandas as pd
+
+from FootballDataOrg import FootballDataOrg
 from UnderStats import UnderstatStats
 from WriteToMariaDB import WriteToMariaDB
 
@@ -43,12 +45,32 @@ def get_kaggle_df(configuration):
     return kaggle_scraper.get_stats(dataset_id)
 
 
+def played_games(configuration, database_writer):
+    understat_cleaned_df = get_undertstat_df(configuration)
+    kaggle_cleaned_df = get_kaggle_df(configuration)
+
+    match_data = pd.merge(understat_cleaned_df, kaggle_cleaned_df,
+                          on=['game_date', 'home_team', 'away_team'],
+                          how='left')
+
+    database_writer.write_dataframe(match_data, 'match_data')
+
+    # match_data.to_csv("C:\\Users\\Antonio\\PycharmProjects\\PremierLeagueMatchFetcher\\resources\\out.csv", index=False)
+
+
+def unplayed_games(configuration, database_writer):
+    football_data_org_config = configuration.get('football_data_org')
+    api_key = football_data_org_config.get('api_key')
+
+    football_data_org_scrapper = FootballDataOrg(api_key)
+    unplayed_games_df = football_data_org_scrapper.get_upcoming_matches_as_df()
+
+    database_writer.write_dataframe(unplayed_games_df, 'unplayed_games')
+
+
 if __name__ == '__main__':
     config = get_config_file(
         'C:\\Users\\Antonio\\PycharmProjects\\PremierLeagueMatchFetcher\\resources\\application.conf')
-
-    understat_cleaned_df = get_undertstat_df(config)
-    kaggle_cleaned_df = get_kaggle_df(config)
 
     mariadb_config = config.get('maria_db')
     db_writer = WriteToMariaDB(
@@ -59,11 +81,5 @@ if __name__ == '__main__':
         mariadb_config.get('database')
     )
 
-    match_data = pd.merge(understat_cleaned_df, kaggle_cleaned_df,
-                        on=['game_date', 'home_team', 'away_team'],
-                        how='left')
-
-    db_writer.write_dataframe(match_data, 'match_data')
-
-
-    # match_data.to_csv("C:\\Users\\Antonio\\PycharmProjects\\PremierLeagueMatchFetcher\\resources\\out.csv", index=False)
+    played_games(config, db_writer)
+    unplayed_games(config, db_writer)
