@@ -17,6 +17,7 @@ class SquadValue:
         df = pd.read_csv(file_path)
         df_with_season = _add_season_to_dataframe(self, df)
         squad_value_per_season = _get_squad_value_per_season(df_with_season)
+        squad_value_per_season['team'] = _rename_team_names(squad_value_per_season, 'team')
         return squad_value_per_season
 
 
@@ -59,3 +60,32 @@ def _get_squad_value_per_season(df_with_season):
     mean_player_valuation_per_team_per_season = mean_player_valuation_per_team_per_season[['season', 'team', 'avg_squad_value']]
 
     return mean_player_valuation_per_team_per_season
+
+
+def _rename_team_names(df, col_name):
+    return df[col_name].replace({
+        "Arsenal FC": "Arsenal",
+        "Brentford FC": "Brentford",
+        "Burnley FC": "Burnley",
+        "Chelsea FC": "Chelsea",
+        "Crystal Palace FC": "Crystal Palace",
+        "Liverpool FC": "Liverpool",
+        "Manchester United FC": "Manchester United",
+        "Nottingham Forest FC": "Nottingham Forest",
+        "Sunderland AFC": "Sunderland",
+        "West Ham United FC": "West Ham",
+        "West Ham United": "West Ham",
+        "AFC Bournemouth": "Bournemouth",
+        "Aston Villa FC": "Aston Villa",
+        "Brighton & Hove Albion FC": "Brighton",
+        "Brighton & Hove Albion": "Brighton",
+        "Everton FC": "Everton",
+        "Fulham FC": "Fulham",
+        "Leeds United FC": "Leeds",
+        "Leeds United": "Leeds",
+        "Manchester City FC": "Manchester City",
+        "Newcastle United FC": "Newcastle United",
+        "Tottenham Hotspur FC": "Tottenham",
+        "Tottenham Hotspur": "Tottenham",
+        "Wolverhampton Wanderers FC": "Wolverhampton Wanderers"
+    })

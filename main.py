@@ -69,19 +69,20 @@ def played_games(configuration, database_writer):
     match_data = pd.merge(understat_cleaned_df, kaggle_cleaned_df,
                           on=['game_date', 'home_team', 'away_team'],
                           how='left')
+
     # join do squad_value_df com match_data para HOME_TEAM
     match_data = pd.merge(match_data, squad_value_df,
                           left_on=['season', 'home_team'], right_on=['season', 'team'],
                           how='left')\
         .drop('team', axis=1)\
         .rename(columns={'avg_squad_value': 'home_team_avg_squad_value'})
+
     # join do squad_value_df com match_data para AWAY_TEAM
     match_data = pd.merge(match_data, squad_value_df,
                           left_on=['season', 'away_team'], right_on=['season', 'team'],
                           how='left')\
         .drop('team', axis=1)\
         .rename(columns={'avg_squad_value': 'away_team_avg_squad_value'})
-    print(sorted(squad_value_df['team'].unique()))
 
     database_writer.write_dataframe(match_data, 'match_data')
     database_writer.write_dataframe(sorted(squad_value_df['team'].unique()), 'squad_value')
