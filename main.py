@@ -85,7 +85,6 @@ def played_games(configuration, database_writer):
         .rename(columns={'avg_squad_value': 'away_team_avg_squad_value'})
 
     database_writer.write_dataframe(match_data, 'match_data')
-    database_writer.write_dataframe(sorted(squad_value_df['team'].unique()), 'squad_value')
 
     # match_data.to_csv("C:\\Users\\Antonio\\PycharmProjects\\PremierLeagueMatchFetcher\\resources\\out.csv", index=False)
 
