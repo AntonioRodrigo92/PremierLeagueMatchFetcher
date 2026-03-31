@@ -86,15 +86,29 @@ def played_games(configuration, database_writer):
 
     database_writer.write_dataframe(match_data, 'match_data')
 
+    return squad_value_df
+
     # match_data.to_csv("C:\\Users\\Antonio\\PycharmProjects\\PremierLeagueMatchFetcher\\resources\\out.csv", index=False)
 
 
-def unplayed_games(configuration, database_writer):
+def unplayed_games(squad_value_dataframe, configuration, database_writer):
     football_data_org_config = configuration.get('football_data_org')
     api_key = football_data_org_config.get('api_key')
 
     football_data_org_scrapper = FootballDataOrg(api_key)
     unplayed_games_df = football_data_org_scrapper.get_upcoming_matches_as_df()
+
+    unplayed_games_df = pd.merge(unplayed_games_df, squad_value_dataframe,
+                                 left_on=['season', 'home_team'], right_on=['season', 'team'],
+                                 how='left') \
+        .drop('team', axis=1) \
+        .rename(columns={'avg_squad_value': 'home_team_avg_squad_value'})
+
+    unplayed_games_df = pd.merge(unplayed_games_df, squad_value_dataframe,
+                                 left_on=['season', 'away_team'], right_on=['season', 'team'],
+                                 how='left') \
+        .drop('team', axis=1) \
+        .rename(columns={'avg_squad_value': 'away_team_avg_squad_value'})
 
     database_writer.write_dataframe(unplayed_games_df, 'unplayed_games')
 
@@ -113,5 +127,5 @@ if __name__ == '__main__':
         mariadb_config.get('database')
     )
 
-    played_games(config, db_writer)
-    unplayed_games(config, db_writer)
+    squad_value_df = played_games(config, db_writer)
+    unplayed_games(squad_value_df, config, db_writer)
