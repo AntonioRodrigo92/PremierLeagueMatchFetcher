@@ -87,5 +87,17 @@ def _rename_team_names(df, col_name):
         "Newcastle United FC": "Newcastle United",
         "Tottenham Hotspur FC": "Tottenham",
         "Tottenham Hotspur": "Tottenham",
-        "Wolverhampton Wanderers FC": "Wolverhampton Wanderers"
+        "Wolverhampton Wanderers FC": "Wolverhampton Wanderers",
+        "Swansea City": "Swansea",
+        "Leicester City": "Leicester",
+        "Hull City": "Hull",
+        "Norwich City": "Norwich",
+        "Watford FC": "Watford",
+        "Middlesbrough FC": "Middlesbrough",
+        "Huddersfield Town": "Huddersfield",
+        "Cardiff City": "Cardiff",
+        "Luton Town": "Luton",
+        "Ipswich Town": "Ipswich",
+        "Southampton FC": "Southampton",
+        "Stoke City": "Stoke"
     })
