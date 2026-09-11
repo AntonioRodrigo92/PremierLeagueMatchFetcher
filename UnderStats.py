@@ -5,7 +5,7 @@ from understat import Understat
 
 
 class UnderstatStats:
-    def __init__(self, league="EPL", season=2025):
+    def __init__(self, league="EPL", season=2026):
         self.league = league
         self.season = season
         self.df = None

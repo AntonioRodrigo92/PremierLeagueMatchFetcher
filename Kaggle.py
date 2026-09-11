@@ -15,12 +15,12 @@ def rename_teams(df, col_name):
 
 
 class Kaggle:
-    def __init__(self, league="Premier League", season="202526"):
+    def __init__(self, league="Premier League", season="202627"):
         self.league = league
         self.season = season
 
     def get_stats(self, dataset_id):
-        download_path = "./epl_data_2025"
+        download_path = "./epl_data_2026"
         kaggle.api.dataset_download_files(dataset_id, path=download_path, unzip=True)
         file_path = os.path.join(download_path, "football_matches.csv")
         df = pd.read_csv(file_path)

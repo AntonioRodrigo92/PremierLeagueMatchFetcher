@@ -43,7 +43,7 @@ def get_kaggle_df(configuration):
 
     from Kaggle import Kaggle
 
-    kaggle_scraper = Kaggle(league="Premier League", season="202526")
+    kaggle_scraper = Kaggle(league="Premier League", season="202627")
     return kaggle_scraper.get_stats(dataset_id)
 
 
